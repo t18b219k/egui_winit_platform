@@ -14,7 +14,7 @@ use egui::{
 };
 use winit::{
     dpi::PhysicalSize,
-    event::{Event, ModifiersState, VirtualKeyCode, VirtualKeyCode::*, WindowEvent::*},
+    event::{Event, ModifiersState, VirtualKeyCode, VirtualKeyCode::*, WindowEvent::*,IME},
     window::CursorIcon,
 };
 
@@ -228,6 +228,20 @@ impl Platform {
                         }
                     }
                 }
+                IME(ime)=>{
+                    match ime {
+                        IME::Enabled => {
+                            self.raw_input.events.push(egui::Event::CompositionStart)
+                        }
+                        IME::Preedit(t, _,_) => {
+                            self.raw_input.events.push(egui::Event::CompositionUpdate(t.clone()))
+                        }
+                        IME::Commit(text) => {
+                            self.raw_input.events.push(egui::Event::CompositionEnd(text.clone()))
+                        }
+                        IME::Disabled => {}
+                    }
+                }
                 ReceivedCharacter(ch) => {
                     if is_printable(*ch)
                         && !self.modifier_state.ctrl()
@@ -253,7 +267,7 @@ impl Platform {
                 window_id: _window_id,
                 event,
             } => match event {
-                ReceivedCharacter(_) | KeyboardInput { .. } | ModifiersChanged(_) => {
+                ReceivedCharacter(_) | KeyboardInput { .. } | ModifiersChanged(_) |IME(_)=> {
                     self.context().wants_keyboard_input()
                 }
 

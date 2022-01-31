@@ -19,3 +19,5 @@ webbrowser = { version = "0.5", optional = true }
 default = ["default_fonts"]
 clipboard = ["copypasta"]
 default_fonts = ["egui/default_fonts"]
+[patch.crates-io]
+winit={git="https://github.com/t18b219k/winit.git",branch="composition-event"}

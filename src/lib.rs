@@ -237,7 +237,20 @@ impl Platform {
                             self.raw_input.events.push(egui::Event::CompositionUpdate(t.clone()))
                         }
                         IME::Commit(text) => {
-                            self.raw_input.events.push(egui::Event::CompositionEnd(text.clone()))
+                            if text.is_empty(){
+                                self.raw_input.events.push(egui::Event::Key {
+                                    key: Key::Backspace,
+                                    pressed: true,
+                                    modifiers: Default::default()
+                                });
+                                self.raw_input.events.push(egui::Event::Key {
+                                    key: Key::Backspace,
+                                    pressed: false,
+                                    modifiers: Default::default()
+                                });
+                            }else {
+                                self.raw_input.events.push(egui::Event::CompositionEnd(text.clone()))
+                            }
                         }
                         IME::Disabled => {}
                     }

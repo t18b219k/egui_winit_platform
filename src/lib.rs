@@ -7,7 +7,11 @@
 
 #[cfg(feature = "clipboard")]
 use copypasta::{ClipboardContext, ClipboardProvider};
-use egui::{emath::{pos2, vec2}, epaint::ClippedShape, Key, Pos2, Context};
+use egui::{
+    emath::{pos2, vec2},
+    epaint::ClippedShape,
+    CtxRef, Key, Pos2,
+};
 use winit::{
     dpi::PhysicalSize,
     event::{Event, ModifiersState, VirtualKeyCode, VirtualKeyCode::*, WindowEvent::*,IME},
@@ -54,7 +58,7 @@ fn handle_clipboard(output: &egui::Output, clipboard: Option<&mut ClipboardConte
 /// Provides the integration between egui and winit.
 pub struct Platform {
     scale_factor: f64,
-    context: Context,
+    context: CtxRef,
     raw_input: egui::RawInput,
     modifier_state: ModifiersState,
     pointer_pos: Option<egui::Pos2>,
@@ -66,7 +70,7 @@ pub struct Platform {
 impl Platform {
     /// Creates a new `Platform`.
     pub fn new(descriptor: PlatformDescriptor) -> Self {
-        let context = Context::default();
+        let context = CtxRef::default();
 
         context.set_fonts(descriptor.font_definitions.clone());
         context.set_style(descriptor.style);
@@ -333,7 +337,7 @@ impl Platform {
     }
 
     /// Returns the internal egui context.
-    pub fn context(&self) -> Context {
+    pub fn context(&self) -> CtxRef {
         self.context.clone()
     }
 

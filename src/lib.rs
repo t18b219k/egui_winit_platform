@@ -9,7 +9,6 @@
 use copypasta::{ClipboardContext, ClipboardProvider};
 use egui::{
     emath::{pos2, vec2},
-    epaint::ClippedShape,
     Context, Key, Pos2,
 };
 use winit::{
